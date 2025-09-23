@@ -1,5 +1,5 @@
 import pytest
-from exerc_3 import Conta, ValorInvalidoError, SaldoInsuficienteError, LimiteDiarioExcedidoError
+from ex_3 import Conta, ValorInvalidoError, SaldoInsuficienteError, LimiteDiarioExcedidoError
 
 def test_deposito_valido_aumenta_saldo():
     c = Conta()

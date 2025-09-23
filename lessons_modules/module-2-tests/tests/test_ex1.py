@@ -1,5 +1,5 @@
 import pytest
-from exerc-1 import soma, dividir
+from ex_1 import soma, dividir
 
 def test_soma_inteiros():
     assert soma(2, 3) == 5

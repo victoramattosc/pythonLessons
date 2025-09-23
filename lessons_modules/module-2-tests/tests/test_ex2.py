@@ -1,5 +1,5 @@
 import pytest
-from exerc_2 import aplicar_desconto, aplicar_descontos_em_cascata
+from ex_2 import aplicar_desconto, aplicar_descontos_em_cascata
 
 def test_desconto_valido():
     assert aplicar_desconto(100, 10) == 90
