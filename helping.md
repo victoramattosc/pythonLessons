@@ -23,6 +23,9 @@ pytest -q            # saída silenciosa
 pytest tests/test_x.py::test_func  # roda um teste específico
 ```
 
+> **Dica:** mantenha o `requirements.txt` ou `pyproject.toml` com as dependências do projeto. Se perder o ambiente é só recriar
+> com `pip install -r requirements.txt`.
+
 **Estrutura simples de projeto**
 
 ```
@@ -35,6 +38,8 @@ meu_projeto/
     test_models.py
     test_services.py
 ```
+
+*Tudo em testes precisa conseguir importar o código principal.* Se der erro de importação, garanta que a raiz do projeto está no `PYTHONPATH` (por exemplo, rodando `pytest` a partir da raiz).
 
 ---
 
@@ -85,6 +90,8 @@ while contador < 3:
 
 ### Funções
 
+*Retorne sempre que possível (em vez de só `printar`) para facilitar o teste automatizado.*
+
 ```python
 def soma(a, b=0):            # b com valor padrão
     return a + b             # sempre retorne o resultado
@@ -119,6 +126,8 @@ except ValueError:            # capture o erro certo
 * Indentação com 4 espaços (sem tabs misturados).
 * Nomes de variáveis/métodos em `snake_case`.
 * Funções curtas, claras e com responsabilidade única.
+* Use comentários curtos para explicar `"porquê"` algo existe (o `"como"` deve ser compreensível só lendo o código).
+* Separe código em funções para facilitar testes e reaproveitamento.
 
 ---
 
@@ -143,6 +152,7 @@ print(p.apresentar())
 
 * **Sempre** inclua `self` no primeiro parâmetro de métodos de instância.
 * Atributos "privados" por convenção usam `_` (ex.: `_saldo`).
+* Se for criar vários objetos com dados semelhantes, considere usar `@dataclass` (facilita criação de `__init__`, `__repr__`, etc.).
 
 ### Herança (básico)
 
@@ -152,6 +162,8 @@ class Funcionario(Pessoa):
         super().__init__(nome, idade)   # chama construtor da base
         self.cargo = cargo
 ```
+
+*Use herança somente quando a relação "é um" fizer sentido (por exemplo, `Funcionario` **é um** `Pessoa`).*
 
 ---
 
@@ -174,7 +186,7 @@ def somar(a, b):
 somar(2, 3)  # imprime "Chamando somar"
 ```
 
-> Dica: mantenha o wrapper simples e preserve assinatura/comportamento originais.
+> Dica: mantenha o wrapper simples e preserve assinatura/comportamento originais. Se precisar copiar metadata, use `functools.wraps`.
 
 ---
 
@@ -220,6 +232,11 @@ Validador.eh_positivo(10)  # True (sem instanciar)
 
 > Observação: `@classmethod` existe, mas foque aqui em `@staticmethod` como pedido.
 
+**Quando usar classe abstrata?**
+
+* Quando você tem várias subclasses que precisam compartilhar a mesma interface (mesmos métodos obrigatórios).
+* Para proibir instanciar uma classe `"genérica"` sem implementação concreta.
+
 ---
 
 ## 6) Testes Unitários com `pytest` (básico)
@@ -248,6 +265,20 @@ def test_soma_basico():
 * AAA (Arrange, Act, Assert): prepare dados, execute a função, faça asserções.
 * Um cenário por teste; nomes de teste descritivos.
 * Cobrir casos felizes e casos inválidos simples.
+
+### 6.1) Quando criar e rodar testes com `pytest`
+
+* **Criar um teste** sempre que implementar uma função/classe nova ou corrigir um bug — o teste impede que o erro volte.
+* **Onde salvar:**
+  * Testes rápidos unitários → `tests/` ao lado do código (`tests/test_nome_modulo.py`).
+  * Exemplos de uso ou tutoriais → dentro da pasta do módulo (ex.: `module-2-tests/tests/`).
+  * Scripts grandes ou simulados → podem ter uma subpasta `tests/` própria para manter isolamento.
+* **Rodar os testes**:
+  * Antes de commitar: `pytest` na raiz garante que nada quebrou.
+  * Ao estudar uma lição: rode apenas o arquivo referente (ex.: `pytest lessons_modules/module-2-tests/tests/test_ex2.py`).
+  * Ao explorar um bug difícil: use `-k` para filtrar (`pytest -k nome_do_teste`).
+* **Se o teste quebrar:** leia a mensagem inteira, corrija o código **ou** ajuste o teste se o comportamento esperado mudou.
+* **Tempo curto?** Execute primeiro os testes do módulo que você alterou; depois rode o conjunto completo quando tiver tempo.
 
 ---
 
