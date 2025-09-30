@@ -13,6 +13,10 @@ Os exemplos incluídos aqui podem ser copiados e colados em outros projetos para
 7. Propriedades com @property
 """
 
+from abc import ABC, abstractmethod
+from typing import Any, Callable
+
+
 # 1. Variáveis e tipos básicos
 # Atribuição simples de diferentes tipos de dados
 my_int: int = 42
@@ -27,17 +31,18 @@ def add(a: int, b: int) -> int:
     """Retorna a soma de dois números."""
     return a + b
 
-def greet(name: str, greeting: str = "Olá") -> None:
-    """Saúda uma pessoa com uma saudação opcional."""
-    print(f"{greeting}, {name}!")
+def greet(name: str, greeting: str = "Olá") -> str:
+    """Saúda uma pessoa com uma saudação opcional e retorna a mensagem."""
+    return f"{greeting}, {name}!"
 
 # Função com *args e **kwargs
-def print_args_kwargs(*args, **kwargs) -> None:
-    """Exibe valores posicionais e nomeados."""
-    print("Args:", args)
-    print("Kwargs:", kwargs)
+def print_args_kwargs(*args, **kwargs) -> dict[str, Any]:
+    """Retorna um resumo dos valores posicionais e nomeados informados."""
+    return {"args": args, "kwargs": kwargs}
 
 # 3. Classes e métodos
+
+
 class ExampleClass:
     """Exemplo de classe com variáveis de instância, classe e métodos diversos."""
     class_var: str = "Sou uma variável de classe"
@@ -60,27 +65,26 @@ class ExampleClass:
         return "Sou um método estático"
 
 # 4. Classes abstratas
-from abc import ABC, abstractmethod
 
 class AbstractWorker(ABC):
     """Interface de exemplo usando classe abstrata."""
 
     @abstractmethod
-    def work(self) -> None:
+    def work(self) -> str:
         """Método que deve ser implementado pelas subclasses."""
-        pass
+        raise NotImplementedError
 
 class Developer(AbstractWorker):
     """Implementação concreta de AbstractWorker."""
 
-    def work(self) -> None:
-        print("Escrevendo código...")
+    def work(self) -> str:
+        return "Escrevendo código..."
 
 class Designer(AbstractWorker):
     """Outra implementação concreta de AbstractWorker."""
 
-    def work(self) -> None:
-        print("Desenhando interfaces...")
+    def work(self) -> str:
+        return "Desenhando interfaces..."
 
 # 5. Polimorfismo e herança
 class Animal:
@@ -98,12 +102,12 @@ class Cat(Animal):
     def speak(self) -> str:
         return "Miau!"
 
-def make_animal_speak(animal: Animal) -> None:
-    """Função que aceita qualquer Animal e executa seu método speak."""
-    print(animal.speak())
+def make_animal_speak(animal: Animal) -> str:
+    """Função que aceita qualquer Animal e retorna o resultado de speak."""
+    return animal.speak()
 
 # 6. Decoradores de funções
-def simple_decorator(func):
+def simple_decorator(func: Callable[..., Any]) -> Callable[..., Any]:
     """Exemplo de decorador simples que envolve a execução de uma função."""
     def wrapper(*args, **kwargs):
         print("Antes da chamada da função")
@@ -113,23 +117,25 @@ def simple_decorator(func):
     return wrapper
 
 @simple_decorator
-def say_hello(name: str) -> None:
-    """Função decorada que simplesmente imprime uma saudação."""
-    print(f"Olá, {name}!")
+def say_hello(name: str) -> str:
+    """Função decorada que retorna uma saudação."""
+    return f"Olá, {name}!"
 
 # Decorador com parâmetros
 def repeat(n: int):
     """Decorador que repete a execução de uma função n vezes."""
-    def decorator(func):
+    def decorator(func: Callable[..., Any]):
         def wrapper(*args, **kwargs):
+            results: list[Any] = []
             for _ in range(n):
-                func(*args, **kwargs)
+                results.append(func(*args, **kwargs))
+            return results
         return wrapper
     return decorator
 
 @repeat(3)
-def greet_three_times() -> None:
-    print("Olá!")
+def greet_three_times() -> str:
+    return "Olá!"
 
 # 7. Propriedades com @property
 class Person:
@@ -157,15 +163,18 @@ class Person:
 # Uso das classes abstratas e polimorfismo (exemplo de execução, se desejado)
 if __name__ == "__main__":
     # Demonstrar o decorador simples
-    say_hello("Mundo")
+    saudacao = say_hello("Mundo")
+    print(saudacao)
 
     # Demonstrar o decorador com repetição
-    greet_three_times()
+    saudacoes_repetidas = greet_three_times()
+    print(saudacoes_repetidas)
 
     # Demonstrar polimorfismo
     animals: list[Animal] = [Dog(), Cat()]
     for animal in animals:
-        make_animal_speak(animal)
+        fala = make_animal_speak(animal)
+        print(fala)
 
     # Demonstrar o uso de propriedade
     pessoa = Person("Alice")
