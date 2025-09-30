@@ -62,6 +62,15 @@ coordenada = (10, 20)             # tuple (imutável)
 contatos = {"email": "a@b.com"}  # dict (chave -> valor)
 unique = {1, 2, 2, 3}             # set (sem duplicados => {1,2,3})
 
+Lista (list) → mutável, ordenada, permite elementos repetidos.
+Exemplo: my_list = [1, 2, 3] → você pode adicionar, remover ou alterar valores.
+
+Dicionário (dict) → coleção de pares chave: valor, mutável, sem ordem fixa (embora mantenha a inserção).
+Exemplo: my_dict = {"chave": "valor"} → acessa valores pela chave.
+
+Tupla (tuple) → imutável, ordenada, também permite repetidos.
+Exemplo: my_tuple = (4, 5, 6) → não pode ser alterada após criada.
+
 print(f"{nome} tem {idade} anos")  # f-string
 ```
 
